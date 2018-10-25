@@ -44,7 +44,6 @@ class PING:
 		for i in self.data:
 			if i not in self.last:
 				new.append(i)
-		with open(self)
 
 	def send(self): #sends gmail
 		smtps=smtp.SMTP_SSL("smtp.gmail.com",465)
