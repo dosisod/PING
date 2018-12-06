@@ -27,7 +27,7 @@ class EZWS:
 			self.ua=ua #user agent
 			self.robo=RobotsCache(capacity=0)
 
-		#check var disables or enables robots.txt checking
+		#the check variable disables or enables robots.txt checking
 		#recommended to keep default True value
 		self.check=check
 		self.req=requests #request obj for parsing url
@@ -77,9 +77,11 @@ class EZWS:
 			if self.config["header"]:
 				sc.writerow(self.config["header"]) #add header from config to csv
 
-		for link in self.config["links"]:     #loop through links
+		self.data={}
+		for link in self.config["links"]: #loop through links
 			if self.allowed(link["url"]): #check if url is allowed
 				self.download(link["url"]) #if so download it
+				rows=[]
 				for divs in self.soup.select(link["container"]):
 					row=[] #reset row
 					for get in link["grab"]: #grabs each element from inside each div
@@ -96,9 +98,6 @@ class EZWS:
 								else: #if empty, get the text from tag
 									cont.append(item.text)
 							row.append(cont)
-
-					self.data+=row
-					if self.output:
-						sc.writerow(row)
-		if self.output:
-			sc.close()
+							
+					rows+=row
+				self.data[link["url"]]=rows

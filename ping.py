@@ -29,7 +29,7 @@ class PING:
 		except FileNotFoundError:
 			raise ValueError("files storing username, password, or gmail are non-existent")
 
-		if os.path.exists(last): #if last.json doesnt exist, make a blank arr
+		if os.path.exists(last):
 			with open(last, "w+") as f:
 				self.last=json.load(f)
 		else:
@@ -39,11 +39,13 @@ class PING:
 		self.ez.grab()
 		self.data=self.ez.data
 
-	def parse(self): #gets new data points and creates msg
+	def unique(self): #gets new data points and creates msg
 		new=[]
 		for i in self.data:
 			if i not in self.last:
 				new.append(i)
+		
+		self.data=new
 
 	def send(self): #sends gmail
 		smtps=smtp.SMTP_SSL("smtp.gmail.com",465)
@@ -53,5 +55,6 @@ class PING:
 
 	def auto(self): #grabs and closes automatically
 		self.grab()
-		self.parse()
+		print(self.data)
+		#print(self.data)
 		#self.send()

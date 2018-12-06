@@ -3,6 +3,9 @@
 	"links":[
 		{"url":"http://0.0.0.0:1234/index.html",
 		"container":"html",
-		"grab":[{"css":"a", "contents":["href",""]}]
-	}]
+		"grab":[
+		    {"css":"a", "contents":["href",""]},
+		    {"css":"p", "contents":[""]}
+		]}
+	]
 }
