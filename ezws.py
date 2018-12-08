@@ -77,7 +77,7 @@ class EZWS:
 			if self.config["header"]:
 				sc.writerow(self.config["header"]) #add header from config to csv
 
-		self.data={}
+		self.data=[]
 		for link in self.config["links"]: #loop through links
 			if self.allowed(link["url"]): #check if url is allowed
 				self.download(link["url"]) #if so download it
@@ -100,4 +100,4 @@ class EZWS:
 							row.append(cont)
 							
 					rows+=row
-				self.data[link["url"]]=rows
+				self.data.append({"url":link["url"],"data":rows})

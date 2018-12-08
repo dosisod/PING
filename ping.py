@@ -41,10 +41,18 @@ class PING:
 
 	def unique(self): #gets new data points and creates msg
 		new=[]
-		for i in self.data:
-			if i not in self.last:
-				new.append(i)
-		
+		for link in self.data:
+			if link["url"] not in [i["url"] for i in self.last]:
+				new.append(link) #appends all link data if link has never been seen
+			else:
+				indexid=[i["url"] for i in self.last].index(link["url"]) #get index of dict storing url of current link
+				indextemp={"url":link["url"],"data":[]}
+				for info in link["data"]:
+					if info not in self.last[indexid]["data"]:
+						indextemp["data"].append(info) #if there is new info in the site, add it temp
+				if indextemp["data"]:
+					new.append(indextemp) #if there was any new info in site add temp to new
+				
 		self.data=new
 
 	def send(self): #sends gmail
@@ -55,6 +63,7 @@ class PING:
 
 	def auto(self): #grabs and closes automatically
 		self.grab()
+		self.unique()
 		print(self.data)
 		#print(self.data)
 		#self.send()
