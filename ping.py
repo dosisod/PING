@@ -1,3 +1,4 @@
+from email.mime.text import MIMEText
 from ezws import EZWS
 import smtplib
 import json
@@ -29,8 +30,9 @@ class PING:
 		except FileNotFoundError:
 			raise ValueError("files storing username, password, or gmail are non-existent")
 
+		self.lastf=lastf
 		if os.path.exists(lastf):
-			with open(lastf, "w+") as f:
+			with open(lastf, "r+") as f:
 				self.last=json.load(f)
 		else:
 			self.last=[]
@@ -41,7 +43,6 @@ class PING:
 
 	def unique(self): #gets new data points and creates msg
 		new=[]
-		templast=self.data
 		for link in self.data:
 			if link["url"] not in [i["url"] for i in self.last]:
 				new.append(link) #appends all link data if link has never been seen
@@ -54,21 +55,35 @@ class PING:
 				if indextemp["data"]:
 					new.append(indextemp) #if there was any new info in site add temp to new
 
-		self.last=templast
-		self.data=new
+		self.last=self.data
+		self.newdata=new
+
+	def body(self):
+		self.msg=""
+		if self.newdata:
+			for site in self.newdata:
+				self.msg+="Link "+site["url"]+" added:\n"
+				for collection in site["data"]:
+					for cell in collection:
+						self.msg+=cell+" "
+					self.msg+="\n"
 
 	def send(self): #sends gmail
-		smtps=smtp.SMTP_SSL("smtp.gmail.com",465)
-		smtps.ehlo()
-		smtps.login(self.usr, self.pwd)
-		smtps.sendmail(self.usr, self.mail, self.msg)
+		if self.msg:
+			mime=MIMEText(self.msg)
+			smtps=smtplib.SMTP_SSL("smtp.gmail.com",465)
+			smtps.login(self.usr, self.pwd)
+			smtps.sendmail(self.usr, self.mail, mime.as_string())
+		else:
+			print("nothing new")
 
-	def save():
+	def save(self):
 		with open(self.lastf,"w+") as f:
-			json.dump(f,self.last)
+			json.dump(self.last,f)
 
 	def auto(self): #pre-built use case
 		self.grab()
 		self.unique()
 		self.save()
-		#self.send()
+		self.body()
+		self.send()
