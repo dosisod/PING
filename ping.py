@@ -15,7 +15,7 @@ class PING:
 		config EZWS formatted json file
 		string set to true if passing string not filename
 		"""
-		self.ez=EZWS(config, ua, output=False) #makes new EZWS obj
+		self.ez=EZWS(config, ua) #makes new EZWS obj
 
 		try: #opens each file and saves it
 			with open(pwdf) as f:

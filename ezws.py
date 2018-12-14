@@ -20,9 +20,8 @@ class EZWS:
 	req    requests obj
 	raw    raw html from req.get()
 	check  check for robot files, keep true
-	output name of output csv file
 	"""
-	def __init__(self, file, ua, check=True, output="output.csv"): #setting output to false disables file output
+	def __init__(self, file, ua, check=True):
 		if check: #only setup robot checker if robot checking is enabled
 			self.ua=ua #user agent
 			self.robo=RobotsCache(capacity=0)
@@ -31,8 +30,6 @@ class EZWS:
 		#recommended to keep default True value
 		self.check=check
 		self.req=requests #request obj for parsing url
-
-		self.output=output #where to output file
 
 		self.data=[] #init array of grabbed sites
 
@@ -72,11 +69,6 @@ class EZWS:
 			self.soup=BeautifulSoup(self.raw, "html.parser") #loads html into soup obj
 
 	def grab(self):
-		if self.output: #only create simplecsv obj if file outputting is on
-			sc=simplecsv("output.csv", mode="w+") #using w+ mode to remove old output
-			if self.config["header"]:
-				sc.writerow(self.config["header"]) #add header from config to csv
-
 		self.data=[]
 		for link in self.config["links"]: #loop through links
 			if self.allowed(link["url"]): #check if url is allowed
