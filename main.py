@@ -1,7 +1,8 @@
 from ping import PING
 
 def main():
-	p=PING("ping")
+    ua="user-agent here"
+	p=PING(ua)
 	p.auto()
 
 if __name__=="__main__":
