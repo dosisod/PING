@@ -1,6 +1,5 @@
 from urllib.parse import urlparse   #parsing local href
 from reppy.cache import RobotsCache #caching robots.txt files
-from simplecsv import simplecsv     #for exporting data
 from bs4 import BeautifulSoup
 import requests #grabs pages
 import json     #loads url info
