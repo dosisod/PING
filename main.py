@@ -1,7 +1,7 @@
 from ping import PING
 
 def main():
-    ua="user-agent here"
+	ua="user-agent here"
 	p=PING(ua)
 	p.auto()
 
